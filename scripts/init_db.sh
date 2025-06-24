@@ -26,6 +26,8 @@ function check_executable() {
     sqlx
   )
 
+  # Install sqlx cli
+  # cargo install --version="~0.7" sqlx-cli --no-default-features --features rustls,postgres
   for executable in "${executables[@]}"; do
     if ! type "${executable}" &>/dev/null; then
       bail "ERROR: ${executable} not found"
