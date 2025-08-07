@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euxo pipefail
+set -euo pipefail
 
 DB_USER="${POSTGRES_USER:-postgres}"
 DB_PASSWORD="${POSTGRES_PASSWORD:-password}"
@@ -23,7 +23,7 @@ function check_executable() {
 
   executables=(
     psql
-    sqlx
+    "${HOME}/.cargo/bin/sqlx"
   )
 
   # Install sqlx cli
@@ -37,7 +37,7 @@ function check_executable() {
 
 function run_docker() {
   if [[ -z $SKIP_DOCKER ]]; then
-    docker run \
+    podman run \
       --rm \
       -e POSTGRES_USER="${DB_USER}" \
       -e POSTGRES_PASSWORD="${DB_PASSWORD}" \
@@ -59,8 +59,8 @@ function wait_till_db_is_up() {
 
 function start_migration() {
   export DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
-  sqlx database create
-  sqlx migrate run
+  ~/.cargo/bin/sqlx database create
+  ~/.cargo/bin/sqlx migrate run
 }
 
 function main() {
